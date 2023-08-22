@@ -1,5 +1,5 @@
 //
-// Check input samplesheet and get read channels
+// Check input samplesheet and get fasta channels
 //
 
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
