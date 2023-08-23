@@ -1,2 +1,2 @@
 sample,genome
-SA144A,/media/koala/Main/mishell/mlst/genomes_mlst/hpAfrica2x12/GCF_000475715.1_SA144A_genomic.fna.gz
+SA144A,https://raw.githubusercontent.com/limrp/nextflow_metagenomics/05fa7639ea2d568a431a3ea12b3b390a0c98d834/assets/test-data/GCF_000475715.1_SA144A_genomic.fna.gz
