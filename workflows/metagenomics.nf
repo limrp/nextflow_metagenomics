@@ -36,7 +36,7 @@
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include {             INPUT_CHECK             } from '../subworkflows/local/input_check'
-// include { FASTA_ANNOTATION_METAPRODIGAL_CDHIT } from '../subworkflows/local/fasta_annotation_metaprodigal_cdhit.nf'
+include { FASTA_ANNOTATION_METAPRODIGAL_CDHIT } from '../subworkflows/local/fasta_annotation_metaprodigal_cdhit.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,19 +67,19 @@ workflow METAGENOMICS {
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-    INPUT_CHECK (
-        file(params.input)
-    )
+    INPUT_CHECK ( file(params.input) )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
-    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
-    // ! There is currently no tooling to help you write a sample sheet schema
 
+    //
+    // SUBWORKFLOW: Filter of short contigs, prediction of ORF's in a (meta)genome, filter shorter genes and cluster genes
+    //
+    FASTA_ANNOTATION_METAPRODIGAL_CDHIT( INPUT_CHECK.out.genomes_ch )
+    ch_versions = ch_versions.mix( FASTA_ANNOTATION_METAPRODIGAL_CDHIT.out.versions )
 
-
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
+    //
+    // MODULE:
+    //
+    // CUSTOM_DUMPSOFTWAREVERSIONS ( ch_versions.unique().collectFile(name: 'collated_versions.yml') )
 
     //
     // MODULE: MultiQC
