@@ -15,12 +15,11 @@
 # *--------------------------------------------------------------------------------------------------------
 # | USAGE:  
 # | - With a file:
+# |   python3 filter_seqs_by_length.py --input input.fasta --min_len 100 --output output.fasta
 # |   python3 filter_seqs_by_length.py -i input.fasta -m 100 -o output.fasta
 # | - With standard input:
 # |   cat input.fasta | python3 filter_seqs_by_length.py -i - -m 100 -o output.fasta
 # |   pigz input.fasta.gz | python3 filter_seqs_by_length.py -i - -m 100 -o output.fasta
-# *--------------------------------------------------------------------------------------------------------
-# | WARNING: 
 # *--------------------------------------------------------------------------------------------------------
 
 # *-------------------------------------  Libraries ------------------------------------------------------*
