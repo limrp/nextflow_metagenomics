@@ -8,6 +8,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+
 def sniff_format(handle):
     """
     Detect the tabular format.
@@ -17,6 +18,7 @@ def sniff_format(handle):
     sniffer = csv.Sniffer()
     dialect = sniffer.sniff(peek)
     return dialect
+
 
 class RowChecker:
     def __init__(self, sample_col="sample", genome_col="genome", **kwargs):
@@ -38,6 +40,7 @@ class RowChecker:
     def validate_unique_samples(self):
         if len(self._seen) != len(self.modified):
             raise AssertionError("Duplicate samples found. Sample names and genome paths must be unique.")
+
 
 def check_samplesheet(file_in, file_out):
     required_columns = {"sample", "genome"}
@@ -66,20 +69,23 @@ def check_samplesheet(file_in, file_out):
         for row in checker.modified:
             writer.writerow(row)
 
+
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(
         description="Validate and transform a tabular samplesheet.",
         epilog="Example: python check_samplesheet.py --input samplesheet.csv --output samplesheet.valid.csv",
     )
     parser.add_argument(
-        "-i", "--input",
+        "-i",
+        "--input",
         metavar="FILE_IN",
         type=Path,
         required=True,
         help="Tabular input samplesheet in CSV or TSV format.",
     )
     parser.add_argument(
-        "-o", "--output",
+        "-o",
+        "--output",
         metavar="FILE_OUT",
         type=Path,
         required=True,
@@ -94,6 +100,7 @@ def parse_args(argv=None):
     )
     return parser.parse_args(argv)
 
+
 def main(argv=None):
     args = parse_args(argv)
     logging.basicConfig(level=args.log_level, format="[%(levelname)s] %(message)s")
@@ -102,6 +109,7 @@ def main(argv=None):
         sys.exit(2)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     check_samplesheet(args.input, args.output)
+
 
 if __name__ == "__main__":
     sys.exit(main())
