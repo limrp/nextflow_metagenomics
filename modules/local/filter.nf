@@ -10,7 +10,7 @@ process FILTER {
     input:
     tuple val(meta), path(genome)
     val(sequence_type)
-    
+
     output:
     //tuple val(meta), path('*.txt'), emit: info_ch
     tuple val(meta), path ('*.fa.gz') , emit: fasta_ch
