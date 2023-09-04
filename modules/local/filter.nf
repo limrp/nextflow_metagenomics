@@ -13,25 +13,25 @@ process FILTER {
     
     output:
     //tuple val(meta), path('*.txt'), emit: info_ch
-    tuple val(meta), path ('*.fa.gz') , emit: fasta_ch 
+    tuple val(meta), path ('*.fa.gz') , emit: fasta_ch
     tuple val(meta), path ('*.txt')   , emit: log_ch
     path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
-    
+
     script:
     def prefix    = task.ext.prefix    ?: "${meta.id}"
     // Define a variable named "threshold" without assigning a value to it yet.
-    def threshold 
+    def threshold
     // If the variable "sequence_type" is equal to the string 'genome', execute the code inside this block.
-    if (sequence_type == 'genome') { 
-        // If "params.genome_threshold" is not null or false, assign its value to "threshold". 
+    if (sequence_type == 'genome') {
+        // If "params.genome_threshold" is not null or false, assign its value to "threshold".
         // If it is null or false, assign the default value of 1000 to "threshold".
         threshold = params.genome_threshold
     // If "sequence_type" is not 'genome' but is equal to 'gene', execute the code inside this block.
-    } else if (sequence_type == 'gene') { 
-        // If "params.gene_threshold" is not null or false, assign its value to "threshold". 
+    } else if (sequence_type == 'gene') {
+        // If "params.gene_threshold" is not null or false, assign its value to "threshold".
         // If it is null or false, assign the default value of 500 to "threshold".
         threshold = params.gene_threshold
     }
@@ -45,7 +45,7 @@ process FILTER {
         --output "filtered_${prefix}.fa"
 
     pigz -nm "filtered_${prefix}.fa"
-    
+
     echo "Number of sequences after filtering:" >> "${prefix}"_number_sequences.txt
     zcat "filtered_${prefix}.fa.gz" | grep -c ">" >> "${prefix}"_number_sequences.txt
 
