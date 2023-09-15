@@ -8,7 +8,7 @@
 
 ## Introduction
 
-**limrp/metagenomics** is a bioinformatics pipeline that ...
+**limrp/metagenomics** is a bioinformatics pipeline that facilitates comprehensive metagenomic data analysis through the integration of several established tools. Built on the robust and scalable framework of Nextflow, it is tailored to handle a diverse range of metagenomic datasets, ensuring high precision and efficiency.
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
@@ -20,8 +20,9 @@
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+1. Metagenome gene annotation ([`Prodigal`](https://github.com/hyattpd/Prodigal))
+2. Reduced redundancy by clustering of the nucleotide sequences of the identified genes. ([`CD-HIT`](https://sites.google.com/view/cd-hit))
+3. Taxonomic classification ([`Kraken2`](https://ccb.jhu.edu/software/kraken2/) and [`Kaiju`](https://ccb.jhu.edu/software/kraken2/))
 
 ## Usage
 

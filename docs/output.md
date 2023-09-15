@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+This document describes the output produced by the pipeline.
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
@@ -12,30 +12,62 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [FastQC](#fastqc) - Raw read QC
+- [Prodigal](#fastqc) - Prodigal provides fast, accurate gene predictions in GFF3 or Genbank.
+- [CD-HIT](#CD-HIT) - a very widely used program for clustering and comparing protein or nucleotide sequences.
+- [Kraken2](#Kraken2) - a taxonomic classification tool that uses exact k-mer matches to find the lowest common ancestor (LCA) of a given sequence.
+- [Kaiju](#Kaiju) - Fast and sensitive taxonomic classification for metagenomics.
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-### FastQC
+### Prodigal
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+- `annotation_prodigal/`
+  - `*.fna.gz`: Gene predictions in fasta format.
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
-
-![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
-
-![MultiQC - FastQC mean quality scores plot](images/mqc_fastqc_quality.png)
-
-![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
+[Prodigal](https://github.com/hyattpd/Prodigal) (Prokaryotic Dynamic Programming Genefinding Algorithm) will serve as the first step in the pipeline, being used for the identification of genes within microbial DNA sequences. Its accuracy in predicting the genetic elements of microbial communities forms a robust foundation for the subsequent analysis stages. For further reading and documentation see the [Prodigal Wiki Documentation](https://github.com/hyattpd/prodigal/wiki).
 
 > **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
+
+### CD-HIT
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `cdhit/`
+  - `*.fasta`: Clustered nucleotide sequences of gene predictions.
+
+</details>
+
+[CD-HIT](https://sites.google.com/view/cd-hit) Following gene identification, CD-HIT comes into play to assist in clustering similar nucleotide sequences, facilitating the reduction of data redundancy and complexity. This step is crucial for enhancing the efficiency and speed of the later analytical stages. For further reading and documentation see the [CD-HIT Wiki Documentation](https://github.com/weizhongli/cdhit/wiki).
+
+### Kraken2
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `kraken/`
+  - `*.report`: Taxonomic classification of nucleotide sequences, categorizing them into distinct taxa.
+
+</details>
+
+[Kraken](https://ccb.jhu.edu/software/kraken2/) A rapid sequence classification tool will then be applied to align the sequences against a comprehensive database. It enables the high-throughput assignment of taxonomic labels to the sequences, offering insights into the microbial communities present in the sample. For further reading and documentation see the [Kraken2 Wiki Documentation](https://github.com/DerrickWood/kraken2/wiki).
+
+### Kaiju
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `kraken/`
+  - `*.report`: Taxonomic assignments based on the classification of nucleotide sequences by comparing them to a database of protein sequences.
+
+</details>
+
+[Kraken](https://ccb.jhu.edu/software/kraken2/) A rapid sequence classification tool will then be applied to align the sequences against a comprehensive database. It enables the high-throughput assignment of taxonomic labels to the sequences, offering insights into the microbial communities present in the sample. For further reading and documentation see the [Kraken2 Wiki Documentation](https://github.com/DerrickWood/kraken2/wiki).
 
 ### MultiQC
 
