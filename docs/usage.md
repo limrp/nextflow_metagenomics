@@ -14,9 +14,7 @@ You will need to create a samplesheet with information about the samples you wou
 --input '[path to samplesheet file]'
 ```
 
-
 ### Full samplesheet
-
 
 A final samplesheet file may look something like the one below.
 
@@ -33,10 +31,10 @@ SA172C,/path/to/GCF_000476815.1_SA172C_genomic.fna.gz
 SA175A,/path/to/GCF_000476895.1_SA175A_genomic.fna.gz
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `genome` | Full path to genome file. File has to be gzipped and have the extension ".fasta.gz", ".fa.gz" or ".fna.gz".                                                             |
+| Column   | Description                                                                                                                                                                            |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample` | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
+| `genome` | Full path to genome file. File has to be gzipped and have the extension ".fasta.gz", ".fa.gz" or ".fna.gz".                                                                            |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
