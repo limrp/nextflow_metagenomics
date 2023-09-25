@@ -35,7 +35,7 @@
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include {             INPUT_CHECK             } from '../subworkflows/local/input_check'
+include { INPUT_CHECK                         } from '../subworkflows/local/input_check'
 include { FASTA_ANNOTATION_METAPRODIGAL_CDHIT } from '../subworkflows/local/fasta_annotation_metaprodigal_cdhit.nf'
 
 /*
@@ -47,7 +47,6 @@ include { FASTA_ANNOTATION_METAPRODIGAL_CDHIT } from '../subworkflows/local/fast
 //
 // MODULE: Installed directly from nf-core/modules
 //
-// include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 // include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -67,7 +66,8 @@ workflow METAGENOMICS {
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-    INPUT_CHECK ( file(params.input) )
+    input_ch = Channel.fromPath(params.input)
+    INPUT_CHECK ( input_ch )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //
