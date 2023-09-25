@@ -9,45 +9,26 @@ process FILTER {
 
     input:
     tuple val(meta), path(genome)
-    val(sequence_type)
 
     output:
-    //tuple val(meta), path('*.txt'), emit: info_ch
-    tuple val(meta), path ('*.fa.gz') , emit: fasta_ch
-    tuple val(meta), path ('*.txt')   , emit: log_ch
-    path "versions.yml"               , emit: versions
+    tuple val(meta), path ('*.fa'), emit: fasta_ch
+    path "versions.yml"           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def prefix    = task.ext.prefix    ?: "${meta.id}"
-    // Define a variable named "threshold" without assigning a value to it yet.
-    def threshold
-    // If the variable "sequence_type" is equal to the string 'genome', execute the code inside this block.
-    if (sequence_type == 'genome') {
-        // If "params.genome_threshold" is not null or false, assign its value to "threshold".
-        // If it is null or false, assign the default value of 1000 to "threshold".
-        threshold = params.genome_threshold
-    // If "sequence_type" is not 'genome' but is equal to 'gene', execute the code inside this block.
-    } else if (sequence_type == 'gene') {
-        // If "params.gene_threshold" is not null or false, assign its value to "threshold".
-        // If it is null or false, assign the default value of 500 to "threshold".
-        threshold = params.gene_threshold
-    }
+    def args      = task.ext.args ?: '--sequence_type gene'
+    def threshold = args.contains("--sequence_type genome") ? params.genome_threshold :
+                    args.contains("--sequence_type gene")   ? params.gene_threshold :
+                    500
     """
-    echo "Number of sequences before filtering:" >> "${prefix}"_number_sequences.txt
-    zcat $genome | grep -c ">" >> "${prefix}"_number_sequences.txt
 
-    pigz -cdf $genome | filter_by_length.py \\
-        --input - \\
+    filter_by_length.py \\
+        --input $genome \\
         --min_len $threshold \\
         --output "filtered_${prefix}.fa"
-
-    pigz -nm "filtered_${prefix}.fa"
-
-    echo "Number of sequences after filtering:" >> "${prefix}"_number_sequences.txt
-    zcat "filtered_${prefix}.fa.gz" | grep -c ">" >> "${prefix}"_number_sequences.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
