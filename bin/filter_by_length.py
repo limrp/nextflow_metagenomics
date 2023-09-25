@@ -58,9 +58,7 @@ def read_and_filter_fasta(file_object, threshold):
         if len(sequence.replace("\n", "")) >= threshold:
             yield seq_id, sequence
 
-
 # *--------------------------------------* Primary logic of the script *------------------------------------*
-
 
 # Main function to parse command-line arguments and orchestrate reading, filtering, and writing sequences
 def main():
@@ -106,7 +104,6 @@ def main():
     with open(args.output, "w") as f:
         for id, seq in sequences:
             f.write(f">{id}\n{seq}\n")
-
 
 # Execute the main function only if the script is run directly (not imported as a module)
 if __name__ == "__main__":
