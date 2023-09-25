@@ -15,8 +15,6 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE & PRINT PARAMETER SUMMARY
@@ -29,7 +27,7 @@ nextflow.enable.dsl = 2
 // if (params.help) {
 //     def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 //     def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-//     def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
+//     def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv -profile docker"
 //     log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
 //     System.exit(0)
 // }
