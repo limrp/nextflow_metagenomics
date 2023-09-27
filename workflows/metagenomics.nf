@@ -35,8 +35,8 @@
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include {             INPUT_CHECK             } from '../subworkflows/local/input_check'
-// include { FASTA_ANNOTATION_METAPRODIGAL_CDHIT } from '../subworkflows/local/fasta_annotation_metaprodigal_cdhit.nf'
+include { INPUT_CHECK                         } from '../subworkflows/local/input_check'
+include { FASTA_ANNOTATION_METAPRODIGAL_CDHIT } from '../subworkflows/local/fasta_annotation_metaprodigal_cdhit.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,9 +47,8 @@ include {             INPUT_CHECK             } from '../subworkflows/local/inpu
 //
 // MODULE: Installed directly from nf-core/modules
 //
-// include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 // include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
-// include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,19 +66,20 @@ workflow METAGENOMICS {
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-    INPUT_CHECK (
-        file(params.input)
-    )
+    input_ch = Channel.fromPath(params.input)
+    INPUT_CHECK ( input_ch )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
-    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
-    // ! There is currently no tooling to help you write a sample sheet schema
 
+    //
+    // SUBWORKFLOW: Filter of short contigs, prediction of ORF's in a (meta)genome, filter shorter genes and cluster genes
+    //
+    FASTA_ANNOTATION_METAPRODIGAL_CDHIT( INPUT_CHECK.out.genomes_ch )
+    ch_versions = ch_versions.mix( FASTA_ANNOTATION_METAPRODIGAL_CDHIT.out.versions )
 
-
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
+    //
+    // MODULE:
+    //
+    CUSTOM_DUMPSOFTWAREVERSIONS ( ch_versions.unique().collectFile(name: 'collated_versions.yml') )
 
     //
     // MODULE: MultiQC
@@ -114,6 +114,7 @@ workflow METAGENOMICS {
 // workflow.onComplete {
 //     if (params.email || params.email_on_fail) {
 //         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+
 //     }
 //     NfcoreTemplate.summary(workflow, params, log)
 //     if (params.hook_url) {

@@ -1,0 +1,22 @@
+Changes in module 'nf-core/gunzip'
+--- modules/nf-core/gunzip/main.nf
++++ modules/nf-core/gunzip/main.nf
+@@ -19,13 +19,14 @@
+ 
+     script:
+     def args = task.ext.args ?: ''
+-    gunzip = archive.toString() - '.gz'
++    //gunzip = archive.toString() - '.gz'
++    gunzip = archive.toString().endsWith('.gz') ? archive.toString() - '.gz' : archive.toString() + '.gz'
+     """
+     # Not calling gunzip itself because it creates files
+     # with the original group ownership rather than the
+     # default one for that user / the work directory
+     gzip \\
+-        -cd \\
++        -c \\
+         $args \\
+         $archive \\
+         > $gunzip
+
+************************************************************
